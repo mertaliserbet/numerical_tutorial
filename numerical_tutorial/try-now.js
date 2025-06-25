@@ -13,7 +13,9 @@ async function solveEquation() {
   graphContainer.innerHTML = "";
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/solve", {
+    const res = await fetch("https://solvix-numerical-tutorial.up.railway.app/try-now.html", {
+      // http://127.0.0.1:5000/solve localde çalıştırmak için
+      // https://solvix-numerical-tutorial.up.railway.app/try-now.html production için
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ operation, equation })
