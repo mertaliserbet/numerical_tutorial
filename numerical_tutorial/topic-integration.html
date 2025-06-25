@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvix – Numerical Integration</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+  <!-- Navbar -->
+  <header class="custom-navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+        <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+        <span class="brand-text">Solvix</span>
+      </a>
+      <div class="navbar-right">
+        <nav class="navbar-menu">
+          <a href="index.html">Home</a>
+          <a href="tutorials.html" class="active">Tutorials</a>
+          
+        </nav>
+        <a href="try-now.html" class="btn-primary">Try Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+        <h5 class="fw-bold mb-4">Topics</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error Analysis</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and Root-Finding</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-linear.html">Interpolation Techniques</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-differentiation.html">Numerical Differentiation</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations (Linear Systems)</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="col-md-9 col-lg-10 py-4 px-4">
+        <h2 class="fw-bold mb-4">Numerical Integration</h2>
+
+        <h4>1. The Fundamental Meaning of Integration</h4>
+        <p>
+          Integration refers to calculating the area under a curve or summing various contributions over a specific
+          interval. For example:
+        </p>
+        <ul>
+          <li>If you have variable speed data, summing these speed values over time gives you the total distance.</li>
+          <li>In a tank being filled with a non-constant water flow, the total amount of water accumulated over a given
+            time can be calculated using integration.</li>
+          <li>For a device with continuously changing power consumption, the total energy consumed can also be found
+            through integration.</li>
+        </ul>
+        <p>
+          From a graphical perspective, integration typically represents the area under the curve of a function.
+        </p>
+
+        <h4>2. The Meaning of Numerical Integration</h4>
+        <p>
+          When analytical methods (e.g., taking antiderivatives) are insufficient or only discrete data points are
+          available, numerical integration comes into play. It consists of techniques aimed at approximating the value
+          of a definite integral.
+        </p>
+
+        <h4>3. Practical Applications and Objectives</h4>
+        <p>
+          In this topic, we will seek answers to the following questions:
+        </p>
+        <ul>
+          <li>How do we calculate the area under a graph?</li>
+          <li>If we only have data points, how can we estimate this area?</li>
+          <li>How do we perform these operations using Python?</li>
+        </ul>
+        <p>To achieve these goals, we will use the following tools:</p>
+        <ul>
+          <li><code>scipy.integrate.trapezoid</code>: To approximately calculate the area between given data points.
+          </li>
+          <li><code>scipy.integrate.quad</code>: A powerful method for computing the integral of a defined Python
+            function.</li>
+        </ul>
+        <h4>4. Where Is Integration Used in Real Life?</h4>
+        <p>
+          Integration is a critical tool for finding total values in many engineering and software scenarios. Here are
+          some common application areas:
+        </p>
+
+        <h5>4.1 Physics and Engineering Applications</h5>
+        <ul>
+          <li>
+            <strong>Distance from Velocity:</strong> By integrating the instantaneous velocity function, total distance
+            is obtained. <br>
+            Example:
+            \[
+            \text{Distance} = \int \text{velocity}(t)\,dt
+            \]
+          </li>
+          <li>
+            <strong>Work Done by Variable Force:</strong> Integration of force with respect to position gives the work
+            done. <br>
+            Example:
+            \[
+            \text{Work} = \int \text{Force}(x)\,dx
+            \]
+          </li>
+          <li>
+            <strong>Electrical Charge Calculation:</strong> Integration of the current function over time gives the
+            total charge passed. <br>
+            Example:
+            \[
+            \text{Charge} = \int \text{current}(t)\,dt
+            \]
+          </li>
+          <li><strong>Center of Mass / Moment of Inertia:</strong> These are calculated by integrating mass
+            distributions over a specific region.</li>
+          <li><strong>Fluid Dynamics:</strong> Integration of the velocity profile across a pipe’s cross-section is used
+            to compute the total flow.</li>
+        </ul>
+
+        <h5>4.2 Software, Data, and Finance Applications</h5>
+        <ul>
+          <li><strong>User Interaction Analysis:</strong> Accumulated user activities over time (e.g., screen time) can
+            be calculated via integration.</li>
+          <li><strong>Resource Usage Monitoring:</strong> Total CPU or memory usage over time is obtained by integrating
+            the varying load.</li>
+          <li>
+            <strong>Probability Calculations:</strong> The Probability Density Function (PDF) is integrated to calculate
+            the probability within a given range. <br>
+            Example:
+            \[
+            P(a \leq X \leq b) = \int_a^b \text{pdf}(x)\,dx
+            \]
+          </li>
+          <li><strong>Financial Forecasting:</strong> Total gains such as continuous income streams or interest earnings
+            are computed using integration.</li>
+          <li><strong>Image Processing:</strong> Integration is used to measure total light intensity in a given region.
+          </li>
+          <li><strong>Signal Processing:</strong> The time-dependent energy or power of a signal is determined via
+            integration.</li>
+        </ul>
+
+        <p>
+          All these examples show how integration becomes indispensable for understanding system behavior and evaluating
+          aggregate outputs.
+        </p>
+        <h4>5. Why Do We Need Numerical Integration?</h4>
+        <p>
+          Although classical calculus methods are theoretically powerful, they don't always provide practical solutions.
+          Here are the main reasons we turn to numerical methods:
+        </p>
+
+        <h5>5.1 No Analytical Solution</h5>
+        <p>
+          Some functions don't have an integrable closed-form solution. <br>
+          Example:
+          \[
+          \int e^{-x^2}\,dx
+          \]
+          This integral, common in statistics, has no exact symbolic solution.
+        </p>
+        <p>
+          ✔ <strong>Application:</strong> Probability calculations over an interval in normal distributions.
+        </p>
+
+        <h5>5.2 The Function Is Too Complex</h5>
+        <p>
+          If the function has a complex structure or comes from a numerical simulation, taking an antiderivative may not
+          be feasible or practical.
+        </p>
+        <p>
+          ✔ <strong>Application:</strong> Calculating total force by integrating force data from a fluid simulation.
+        </p>
+
+        <h5>5.3 Data Comes from Discrete Points</h5>
+        <p>
+          In real-world applications, we often don't have a continuous function but measured data points instead.
+          Classical calculus rules don't apply in this case.
+        </p>
+        <p>
+          ✔ <strong>Application:</strong> Calculating total energy by integrating power consumption data from a time
+          series.
+        </p>
+
+        <h4>6. The Role of Numerical Methods</h4>
+        <p>
+          Numerical integration methods allow us to:
+        </p>
+        <ul>
+          <li>Approximate the area under complex functions,</li>
+          <li>Work with discrete data,</li>
+          <li>Model real-world systems.</li>
+        </ul>
+        <p>
+          In other words, as software developers, data scientists, and engineers, we can derive meaningful totals even
+          from complex or incomplete data. This provides a significant advantage in fields ranging from system analysis
+          to performance measurement.
+        </p>
+        <h4>7. Visualizing the Area Under a Curve</h4>
+        <p>
+          The definite integral of a function \( f(x) \) over the interval \([a, b]\) is generally interpreted as the
+          area of the following region:
+        </p>
+        <ul>
+          <li>Curve: \( y = f(x) \)</li>
+          <li>Lower boundary: x-axis</li>
+          <li>Vertical boundaries: \( x = a \) and \( x = b \)</li>
+        </ul>
+
+        <!-- Görsel yer tutucu -->
+        <img src="images/page-7.png" alt="Representation of Area Under the Curve" class="img-fluid my-3" />
+
+        <p>
+          Numerical integration methods approximate this area under the curve using simple geometric shapes.
+        </p>
+
+        <div class="alert alert-secondary" role="alert">
+          📝 <strong>Note:</strong> If the function dips below the x-axis, this area is counted as negative. The
+          definite integral considers both positive and negative regions together and gives the net total area.
+        </div>
+
+        <h4>8. Fundamental Approach: Estimating Area with Simple Shapes</h4>
+        <p>
+          Calculating the area under real-life functions directly is often difficult. Numerical methods solve this
+          problem by applying the following idea:
+        </p>
+        <ul>
+          <li>The interval \([a, b]\) is divided into small subintervals.</li>
+          <li>In each subinterval, the function’s shape is approximated with simple geometric forms (rectangle,
+            trapezoid, parabola).</li>
+        </ul>
+
+        <!-- Görsel yer tutucu -->
+        <img src="images/page-8.png" alt="Shapes Approximating the Area" class="img-fluid my-3" />
+
+        <p>The main methods used in this approach are:</p>
+        <ul>
+          <li><strong>Rectangles</strong> → Riemann Sums (Left, Right, Midpoint Approximations)</li>
+          <li><strong>Trapezoids</strong> → Trapezoidal Rule</li>
+          <li><strong>Parabolas</strong> → Simpson’s Rule</li>
+        </ul>
+
+        <p>
+          In general, the more subintervals used (i.e., the smaller the value of \( h \)), the more accurate the result
+          becomes – up to floating-point precision limits.
+        </p>
+        <h4>9. Area Calculation Using the Trapezoidal Rule</h4>
+        <p>
+          Among numerical integration techniques, the Trapezoidal Rule is one of the simplest and most intuitive.
+        </p>
+        <p>Here’s how the Trapezoidal Rule works:</p>
+        <ul>
+          <li>The interval \([a, b]\) is divided into multiple equal or unequal subintervals.</li>
+          <li>In each subinterval, the curve is approximated by a straight line connecting the starting and ending
+            points.</li>
+          <li>The areas of the resulting trapezoids are computed and summed to approximate the integral.</li>
+        </ul>
+
+        <img src="images/page-9.png" alt="Trapezoidal Rule Approximation" class="img-fluid my-3" />
+
+        <h4>10. Riemann Approximations: Estimating Area with Rectangles</h4>
+        <p>
+          Riemann sums are one of the most fundamental approaches to numerical integration. In this method, the interval
+          \([a, b]\) is divided into equal parts, and the area under each subinterval is approximated using a simple
+          rectangle.
+        </p>
+        <p>
+          The height of each rectangle is determined by the function value at a specific reference point. Based on this
+          reference point, there are three main types:
+        </p>
+
+        <h5>10.1 Left Endpoint Approximation</h5>
+        <p>
+          For each subinterval, the height of the rectangle is taken from the function value at the start of that
+          interval.
+        </p>
+        <p>
+          \[
+          \text{Area} \approx h \cdot \left[ f(x_0) + f(x_1) + \dots + f(x_{n-1}) \right]
+          \]
+        </p>
+        <p>In this method, the final point \( x_n \) is not included.</p>
+
+        <h5>10.2 Right Endpoint Approximation</h5>
+        <p>
+          The height of each rectangle is taken from the function value at the end of the subinterval.
+        </p>
+        <p>
+          \[
+          \text{Area} \approx h \cdot \left[ f(x_1) + f(x_2) + \dots + f(x_n) \right]
+          \]
+        </p>
+        <p>In this case, the initial point \( x_0 \) is not included.</p>
+
+        <h5>10.3 Midpoint Approximation</h5>
+        <p>
+          For each subinterval, the rectangle’s height is based on the function value at the midpoint.
+        </p>
+        <p>
+          \[
+          \text{Area} \approx h \cdot \left[ f(m_1) + f(m_2) + \dots + f(m_n) \right]
+          \]
+        </p>
+        <p>
+          Where \( m_i = \frac{x_i + x_{i+1}}{2} \) are the midpoints.
+        </p>
+        <p>
+          This method usually gives a better approximation than left or right endpoint methods because it symmetrically
+          balances the error.
+        </p>
+
+        <h5>10.4 Method Summary</h5>
+        <p><strong>Riemann Approximations:</strong></p>
+        <ul>
+          <li>Are simple and educational.</li>
+          <li>Ideal for introductory understanding of numerical integration.</li>
+          <li>Generally offer low accuracy because they ignore the curve's slope.</li>
+          <li>Error decreases with more subintervals, though this may not always be practical.</li>
+        </ul>
+        <p>
+          Trapezoidal and Simpson’s Rules are improved versions of these basic approaches.
+        </p>
+        <h4>11. Trapezoidal Rule Formula</h4>
+        <p>
+          A trapezoid with height (width) \( h = x_{i+1} - x_i \) and base heights \( y_i, y_{i+1} \) has its area
+          calculated as:
+        </p>
+
+        <p>
+          \[
+          \text{Area}_i = h \cdot \frac{y_i + y_{i+1}}{2}
+          \]
+        </p>
+
+        <p>
+          If the interval \([a, b]\) is divided into \( n \) equal parts (so \( h = \frac{b - a}{n} \)), and the
+          function values are \( y_0, y_1, ..., y_n \), then:
+        </p>
+
+        <p>
+          \[
+          \text{Total Area} \approx \frac{h}{2} \cdot \left[ y_0 + 2y_1 + 2y_2 + \dots + 2y_{n-1} + y_n \right]
+          \]
+        </p>
+
+        <p>
+          <strong>Why are some \( y \) values multiplied by 2?</strong><br>
+          Because the points from \( y_1 \) to \( y_{n-1} \) appear as shared sides of two trapezoids.<br>
+          Only the endpoints \( y_0 \) and \( y_n \) are used in one trapezoid each, so they are only counted once.
+        </p>
+
+        <p>
+          This formula is particularly efficient when working with evenly spaced data points.
+        </p>
+
+        <div class="alert alert-secondary" role="alert">
+          📝 Note: You don’t have to do these calculations manually! Libraries like <code>SciPy</code> can handle this
+          automatically.<br>
+          👉 But it’s important to understand the core idea: <strong>Total Area = Sum of Trapezoids</strong>
+        </div>
+
+        <h4>12. Using the Trapezoidal Rule on Discrete Data</h4>
+        <p>
+          The Trapezoidal Rule is especially useful when you don’t have a continuous function, but instead measured data
+          (e.g., sensor outputs, experimental results) for integration.
+        </p>
+
+        <p>Let’s say you have data like this:</p>
+
+        <pre><code class="language-python">
+x_data = [x₀, x₁, x₂, ..., xₙ]  # e.g., time measurements
+y_data = [y₀, y₁, y₂, ..., yₙ]  # e.g., measured speeds at those times
+</code></pre>
+
+        <p>
+          In that case, the area of a small trapezoid between each pair of neighboring points \( (x_i, y_i) \) and \(
+          (x_{i+1}, y_{i+1}) \) is calculated as:
+        </p>
+
+        <pre><code class="language-python">
+Area_i = (xᵢ₊₁ - xᵢ) * (yᵢ + yᵢ₊₁) / 2
+</code></pre>
+
+        <p>
+          The total area is approximately the sum of all such trapezoids:
+        </p>
+
+        <p>
+          \[
+          \text{Total Area} \approx \sum_{i=0}^{n-1} \text{Area}_i
+          \]
+        </p>
+
+        <p>
+          This method estimates the area under the curve formed by connecting data points with straight lines. It is
+          highly useful in real-world applications where we often only have measurement data rather than a continuous
+          function (e.g., CPU load, battery consumption, sensor data, etc.).
+        </p>
+        <h4>13. Simplifying with SciPy: <code>scipy.integrate.trapezoid</code></h4>
+        <p>
+          Manually calculating and summing the area of each trapezoid can be tedious. Thankfully, Python’s
+          <code>SciPy</code> library does this for us.
+        </p>
+        <p>
+          The <code>scipy.integrate.trapezoid</code> function:
+        </p>
+        <ul>
+          <li>Takes the x and y arrays,</li>
+          <li>Automatically calculates the trapezoid areas between each pair of points,</li>
+          <li>Returns the total area quickly and accurately.</li>
+        </ul>
+        <div class="alert alert-secondary" role="alert">
+          📝 <strong>Note:</strong> The function was formerly known as <code>trapz</code>. <code>trapezoid</code> is the
+          more modern and preferred name, but <code>trapz</code> still works in most cases as an alias.
+        </div>
+
+        <h4>14. Simpson’s Rule: More Accurate Integration with Parabolic Approximation</h4>
+        <p>
+          Simpson’s Rule offers a more precise approach for finding the area under a curve by using parabolas.
+          Especially when the function changes smoothly, this method provides high accuracy. While the trapezoidal rule
+          approximates the curve with straight lines, Simpson’s Rule uses second-degree polynomials (parabolas).
+        </p>
+
+        <h5>14.1 Core Assumption</h5>
+        <p>
+          The Simpson method fits a parabola through three points (e.g., \( x_0, x_1, x_2 \)), and then calculates the
+          area under this parabola.
+        </p>
+
+        <h5>14.2 Formula (Simpson’s 1/3 Rule)</h5>
+        <p>
+          If the interval \([a, b]\) is divided into \( n \) subintervals of equal width and \( n \) is an even number
+          (e.g., 2, 4, 6...), the Simpson’s 1/3 rule is expressed as:
+        </p>
+
+        <p>
+          \[
+          h = \frac{b - a}{n}
+          \]
+          \[
+          \text{Area} \approx \frac{h}{3} \cdot \left[ f(x_0) + 4f(x_1) + 2f(x_2) + 4f(x_3) + \dots + 4f(x_{n-1}) +
+          f(x_n) \right]
+          \]
+        </p>
+
+        <ul>
+          <li>The endpoints \( x_0 \) and \( x_n \) are counted once.</li>
+          <li>Odd-indexed points (e.g., \( x_1, x_3, \dots \)) are multiplied by 4.</li>
+          <li>Even-indexed internal points (e.g., \( x_2, x_4, \dots \)) are multiplied by 2.</li>
+        </ul>
+
+        <h5>14.3 Characteristics</h5>
+        <ul>
+          <li>Provides high accuracy by approximating with second-degree curves.</li>
+          <li>\( n \) must be an even number.</li>
+          <li>Yields impressive results even with few subintervals if the function is smooth.</li>
+          <li>Slightly more computationally intensive than other methods, but many libraries automate it.</li>
+        </ul>
+
+        <h5>14.4 When to Prefer Simpson’s Rule?</h5>
+        <ul>
+          <li>When the function is smooth and high precision is needed.</li>
+          <li>When the number of subintervals can be set to an even value.</li>
+          <li>Especially useful in graphical analysis or physical models where accuracy is crucial.</li>
+        </ul>
+        <h4>15. Integrating Defined Python Functions</h4>
+        <p>
+          What if you have a mathematical function, not discrete data points? For example:
+        </p>
+
+        <pre><code class="language-python">
+import numpy as np
+
+def my_function(x):
+    return np.sin(x) * np.exp(-x / 5.0)
+</code></pre>
+
+        <p>
+          And you want to compute the integral of this function over \( a = 0.0 \) to \( b = 2\pi \).
+        </p>
+
+        <p>You have two main options:</p>
+
+        <h5>15.1. Sample Manually and Use <code>trapezoid</code></h5>
+        <ul>
+          <li>Generate x-values over the interval (e.g., using <code>np.linspace(a, b, N)</code>),</li>
+          <li>Compute \( y = f(x) \) for each point,</li>
+          <li>Use the <code>trapezoid</code> function to estimate the area.</li>
+        </ul>
+
+        <p>
+          ✅ <strong>This method works</strong>, but accuracy depends on how many points (N) you choose.<br>
+          Fewer points = more error.
+        </p>
+
+        <h4>16. Direct Function Integration with SciPy: <code>scipy.integrate.quad</code></h4>
+        <p>
+          For defined Python functions, SciPy offers a more advanced and accurate method:
+        </p>
+
+        <pre><code class="language-python">
+from scipy.integrate import quad
+
+result, error = quad(my_function, a, b)
+</code></pre>
+
+        <p>This approach:</p>
+        <ul>
+          <li>Samples <code>my_function</code> only at the points it needs,</li>
+          <li>Uses adaptive algorithms for high accuracy,</li>
+          <li>Eliminates the need to worry about how many points to sample.</li>
+        </ul>
+
+        <div class="alert alert-success" role="alert">
+          🎯 <strong>Advantage:</strong> <code>quad</code> is usually faster and more accurate with fewer evaluations.
+          That makes it ideal for modeling and simulation tasks in professional scenarios.
+        </div>
+        <h4>17. SciPy’s Powerful Tool: <code>scipy.integrate.quad</code></h4>
+        <p>
+          If you want to compute the definite integral of a function defined in Python, one of SciPy’s most powerful
+          tools is the <code>scipy.integrate.quad</code> function.
+        </p>
+        <p>
+          This method uses a more advanced technique called <strong>adaptive quadrature</strong>. It is based on the
+          <code>QUADPACK</code> library, originally written in Fortran, and typically uses techniques like Gaussian
+          quadrature.
+        </p>
+
+        <h5>17.1 What Is Adaptive Quadrature?</h5>
+        <p>
+          In simple terms, the <code>quad</code> algorithm intelligently processes the integration interval:
+        </p>
+        <ul>
+          <li>It samples more densely in regions where the function changes rapidly or has high oscillation.</li>
+          <li>It samples less in regions where the function is smooth or stable.</li>
+        </ul>
+        <p>
+          This way, computing power is used efficiently and only where needed, while achieving high accuracy.
+        </p>
+
+        <h5>17.2 Usage Example</h5>
+        <p>
+          Suppose you want to integrate a classical function that has no analytical solution — <code>quad</code> is
+          perfect for the job:
+        </p>
+
+        <pre><code class="language-python">
+from scipy.integrate import quad
+import numpy as np
+
+def f(x):
+    return np.exp(-x**2 / 2) / np.sqrt(2 * np.pi)
+
+result, error = quad(f, -1, 1)
+</code></pre>
+
+        <p>
+          In this example, the integral of the standard normal distribution function from \(-1\) to \(1\) is calculated.
+        </p>
+        <p>
+          Since this function has no closed-form antiderivative, numerical integration is essential.
+        </p>
+        <h4>18. Trapezoid or Quad? When Should You Use Each?</h4>
+        <p>
+          The table below clearly summarizes the differences between the two functions and when each should be used:
+        </p>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Feature / Criterion</th>
+                <th><code>scipy.integrate.trapezoid</code></th>
+                <th><code>scipy.integrate.quad</code></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Input Type</strong></td>
+                <td>Discrete \( x \) and \( y \) data arrays</td>
+                <td>A defined Python function \( f(x) \)</td>
+              </tr>
+              <tr>
+                <td><strong>Use Case</strong></td>
+                <td>Integrating measurement data (e.g., sensor, experiment)</td>
+                <td>Integrating analytical functions over an interval \([a, b]\)</td>
+              </tr>
+              <tr>
+                <td><strong>Underlying Method</strong></td>
+                <td>Composite Trapezoidal Rule</td>
+                <td>Adaptive Quadrature (QUADPACK, typically Gaussian methods)</td>
+              </tr>
+              <tr>
+                <td><strong>Data Spacing</strong></td>
+                <td>Works with equally or unequally spaced \( x \) values</td>
+                <td>Chooses required \( x \) values automatically</td>
+              </tr>
+              <tr>
+                <td><strong>Error Estimation</strong></td>
+                <td>❌ Does not provide error estimation</td>
+                <td>✅ Returns result along with absolute error estimate</td>
+              </tr>
+              <tr>
+                <td><strong>Flexibility</strong></td>
+                <td>Limited to the provided \( x \) and \( y \) values</td>
+                <td>Supports infinite intervals, error control, high flexibility</td>
+              </tr>
+              <tr>
+                <td><strong>Data Requirements</strong></td>
+                <td>Requires precomputed \( y \) values</td>
+                <td>\( f(x) \) must be evaluable at any point \( x \)</td>
+              </tr>
+              <tr>
+                <td><strong>Library Automation</strong></td>
+                <td>You handle sampling and data preparation</td>
+                <td>SciPy handles interval partitioning and sampling</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr>
+        <h4>19. Numerical Differentiation vs. Numerical Integration: Key Differences</h4>
+        <p>
+          This comparison highlights the key conceptual and practical differences between numerical differentiation and
+          numerical integration:
+        </p>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Feature / Criterion</th>
+                <th>Numerical Differentiation</th>
+                <th>Numerical Integration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Purpose</strong></td>
+                <td>To find the rate of change (slope) of a function at a specific point</td>
+                <td>To compute the total accumulation or area under the curve over a specific interval</td>
+              </tr>
+              <tr>
+                <td><strong>Core Operation</strong></td>
+                <td>Taking the difference of \( f(x) \) values at nearby points (e.g., \( f(x+h) - f(x-h) \))</td>
+                <td>Summing function values over intervals to approximate the area</td>
+              </tr>
+              <tr>
+                <td><strong>Main Challenge</strong></td>
+                <td>Choosing a proper step size \( h \): balancing truncation vs. rounding errors</td>
+                <td>Choosing sufficient sampling density (trapezoid) or tolerance settings (quad)</td>
+              </tr>
+              <tr>
+                <td><strong>Sensitivity to Noise</strong></td>
+                <td>High – Tends to amplify noise, may require preprocessing</td>
+                <td>Low – Tends to suppress/average noise, generally more robust</td>
+              </tr>
+              <tr>
+                <td><strong>Common Tool for Data</strong></td>
+                <td><code>numpy.gradient()</code></td>
+                <td><code>scipy.integrate.trapezoid()</code></td>
+              </tr>
+              <tr>
+                <td><strong>Common Tool for Functions</strong></td>
+                <td><code>scipy.derivative()</code> (or manual finite difference)</td>
+                <td><code>scipy.integrate.quad()</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>20. Summary: An Overview of Numerical Integration</h4>
+        <p>
+          Numerical integration is the method of approximating the total effect of a function over a defined interval —
+          essentially estimating the area under a curve.
+        </p>
+        <p>
+          Since finding analytical (closed-form) solutions is not always possible in the real world, these methods are
+          indispensable across many fields, from engineering to financial modeling.
+        </p>
+
+        <h5>Where Is It Used?</h5>
+        <ul>
+          <li><strong>In Physics:</strong> Calculating distance from velocity, work from force, or charge flow</li>
+          <li><strong>In Software:</strong> Monitoring resource usage, measuring user interaction</li>
+          <li><strong>In Data Science:</strong> Computing probabilities under distribution curves</li>
+          <li><strong>Also:</strong> Used in Finance, Signal Processing, and other fields for total effect measurement
+          </li>
+        </ul>
+
+        <h5>What Is the Core Idea?</h5>
+        <p>
+          The interval \([a, b]\), where the function is defined, is divided into small subintervals.
+        </p>
+        <p>
+          In each subinterval, the curve is approximated using simple shapes (rectangle, trapezoid, parabola) to
+          estimate the total area. The main methods include:
+        </p>
+        <ul>
+          <li><strong>Riemann Methods</strong> → Rectangular approximation (left, right, midpoint)</li>
+          <li><strong>Trapezoidal Rule</strong> → Approximates area by connecting points with straight lines</li>
+          <li><strong>Simpson’s Rule</strong> → Provides a more precise approximation using parabolas</li>
+        </ul>
+
+        <h5>Which Method Should You Use and When?</h5>
+        <ul>
+          <li><strong>If You Have Data Points:</strong> Use <code>scipy.integrate.trapezoid</code>. This is based on the
+            Trapezoidal Rule and takes \( x, y \) arrays to compute area directly.</li>
+          <li><strong>If You Have a Function Definition:</strong> Use <code>scipy.integrate.quad</code>. This method
+            adaptively subdivides the interval based on the function’s behavior and provides high accuracy.</li>
+        </ul>
+
+        <h5>Compared to Differentiation</h5>
+        <ul>
+          <li><strong>Differentiation:</strong> Gives the instantaneous rate of change — sensitive but noise-prone</li>
+          <li><strong>Integration:</strong> Gives the total accumulation — usually more stable and robust</li>
+        </ul>
+        <p>
+          Together, these tools allow for both local and global system analysis.
+        </p>
+
+        <h5>Conclusion</h5>
+        <p>
+          Numerical integration is not just a theoretical tool — it’s a practical technique for solving real-world
+          problems.
+        </p>
+        <p>
+          Anyone working with data should have a basic understanding of these methods to obtain accurate results and
+          properly interpret system behavior.
+        </p>
+
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+      <!-- Sol Telif -->
+      <div class="mb-2 mb-md-0 small text-muted">
+        © 2025 Solvix. All rights reserved.
+      </div>
+
+      <!-- Orta Başlık ve Açıklama -->
+      <div class="text-center">
+        <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+        <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through interactive
+          learning.</p>
+      </div>
+
+      <!-- Sağ İkonlar -->
+      <div class="footer-icons d-flex align-items-center">
+        <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+        </a>
+        <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+        </a>
+        <a href="https://github.com/mertaliserbet" target="_blank">
+          <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+        </a>
+      </div>
+
+
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

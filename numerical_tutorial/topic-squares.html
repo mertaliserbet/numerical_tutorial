@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solvix – Least Squares and Curve Fitting</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+    <!-- Navbar -->
+    <header class="custom-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+                <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+                <span class="brand-text">Solvix</span>
+            </a>
+            <div class="navbar-right">
+                <nav class="navbar-menu">
+                    <a href="index.html">Home</a>
+                    <a href="tutorials.html" class="active">Tutorials</a>
+
+                </nav>
+                <a href="try-now.html" class="btn-primary">Try Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Layout -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+                <h5 class="fw-bold mb-4">Topics</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error
+                            Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and
+                            Root-Finding</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation
+                            Techniques</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+                            Differentiation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations
+                            (Linear Systems)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+                </ul>
+            </aside>
+
+
+            <main class="col-md-9 col-lg-10 py-4 px-4">
+                <h2 class="fw-bold mb-4">Least Squares and Curve Fitting</h2>
+
+                <h4 class="mt-4">1. Introduction: Why Curve Fitting?</h4>
+                <p><strong>The Problem:</strong> We are given many data points, but they do not exactly follow a known
+                    mathematical function. In this case, we cannot use interpolation, because interpolation assumes the
+                    function must pass through all given points exactly.</p>
+                <p><strong>The Solution:</strong> Instead, we search for a function that approximately follows the trend
+                    of the data. This process is called <strong>Curve Fitting</strong>, and the most common technique is
+                    the <strong>Least Squares Method</strong>.</p>
+
+                <h4 class="mt-4">2. Problem Definition</h4>
+                <p>Given data points:</p>
+                <div>\( (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) \)</div>
+                <p>We aim to find a function \( f(x) \) that fits the data "as well as possible." Typically, this
+                    function is a line, parabola, or polynomial.</p>
+
+                <h4 class="mt-4">3. The Main Idea of the Least Squares Method</h4>
+                <p>The goal is to minimize the total squared error between the actual \( y_i \) values and the predicted
+                    \( f(x_i) \) values:</p>
+                <div>\[ S = \sum_{i=1}^{n} [y_i - f(x_i)]^2 \]</div>
+                <p>This function \( S \) is the error function, and we aim to minimize it by choosing the best
+                    parameters of \( f(x) \).</p>
+
+                <h4 class="mt-4">4. Simplest Case: Linear Regression</h4>
+                <p>We assume the function is a straight line:</p>
+                <div>\( f(x) = ax + b \)</div>
+                <p>We aim to find the best values of \( a \) and \( b \) such that this line fits the data well.</p>
+
+                <h5 class="mt-3">4.1. Goal:</h5>
+                <p>Minimize the squared error:</p>
+                <div>\[ S = \sum_{i=1}^{n} [y_i - (ax_i + b)]^2 \]</div>
+                <p>We take the partial derivatives of \( S \) with respect to \( a \) and \( b \), set them to zero, and
+                    solve &mdash; this gives us the normal equations.</p>
+
+                <h4 class="mt-4">5. Normal Equations (for Linear Fit)</h4>
+                <p>We obtain a system of two equations:</p>
+                <div>
+                    \[
+                    \begin{cases}
+                    a \sum x_i^2 + b \sum x_i = \sum x_i y_i \\
+                    a \sum x_i + b n = \sum y_i
+                    \end{cases}
+                    \]
+                </div>
+                <p>Solving this system gives us the best-fit values of \( a \) and \( b \), and the resulting best-fit
+                    line is: \( y = ax + b \)</p>
+
+                <h4 class="mt-4">6. Applications</h4>
+                <ul>
+                    <li><strong>Data Science:</strong> Trend analysis in datasets</li>
+                    <li><strong>Machine Learning:</strong> Core of regression models</li>
+                    <li><strong>Engineering:</strong> Handling measurement errors</li>
+                    <li><strong>Physics:</strong> Deriving experimental formulas from noisy data</li>
+                </ul>
+
+                <h4 class="mt-4">7. Polynomial Curve Fitting (Higher-Degree)</h4>
+                <p>We are not limited to lines; we can fit polynomials like:</p>
+                <div>\( f(x) = a_2 x^2 + a_1 x + a_0 \)</div>
+                <p>The same least squares principle applies. We construct and solve the normal equations for all
+                    coefficients \( a_i \).</p>
+                <p>This can also be solved in matrix form:</p>
+                <div>\( A^T A \vec{a} = A^T \vec{y} \)</div>
+                <p><strong>Where:</strong></p>
+                <ul>
+                    <li>\( A \): Design matrix (based on input \( x \))</li>
+                    <li>\( \vec{a} \): Coefficient vector</li>
+                    <li>\( \vec{y} \): Output values vector</li>
+                </ul>
+
+                <h4 class="mt-4">8. Interpolation vs. Curve Fitting</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Feature</th>
+                                <th>Interpolation</th>
+                                <th>Curve Fitting</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Number of points</td>
+                                <td>Few</td>
+                                <td>Many</td>
+                            </tr>
+                            <tr>
+                                <td>Fits all points?</td>
+                                <td>Yes (exactly)</td>
+                                <td>No (approximately)</td>
+                            </tr>
+                            <tr>
+                                <td>Purpose</td>
+                                <td>Pass through all points</td>
+                                <td>Best approximate function</td>
+                            </tr>
+                            <tr>
+                                <td>Examples</td>
+                                <td>Lagrange, Newton</td>
+                                <td>Least Squares Method</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="mt-4">9. Python/NumPy Example (Optional)</h4>
+                <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2.2, 2.8, 3.6, 4.5, 5.1])
+
+# Linear fit (degree 1)
+a, b = np.polyfit(x, y, 1)
+
+# Predicted values
+y_fit = a*x + b
+
+plt.scatter(x, y, color='red', label='Data')
+plt.plot(x, y_fit, color='blue', label=f'Fit: y = {a:.2f}x + {b:.2f}')
+plt.legend()
+plt.show()</code></pre>
+
+                <h4 class="mt-4">10. Summary and Key Takeaways</h4>
+                <ul>
+                    <li>Least Squares is used when you want to fit a function to data approximately (not exactly).</li>
+                    <li>It’s essential when you have measurement errors or lots of noisy data.</li>
+                    <li>It’s the foundation of many real-world techniques in AI, machine learning, and data analysis.
+                    </li>
+                    <li>In Numerical Methods, it's one of the most practical and powerful tools.</li>
+                </ul>
+
+                <hr>
+                <h4 class="mt-5">🧪 Try It Yourself: Interactive Curve Fitting</h4>
+
+                <div class="row">
+                    <!-- SOL: Veri Girişi -->
+                    <div class="col-md-5">
+                        <label for="inputPoints" class="form-label fw-semibold">Enter your data points:</label>
+                        <textarea id="inputPoints" class="form-control" rows="7" placeholder="Enter values like:
+-1,4
+0,1
+1,0
+2,1
+3,4"></textarea>
+
+
+                        <label for="fitType" class="form-label fw-semibold">Fit Type:</label>
+                        <select id="fitType" class="form-select mb-3">
+                            <option value="linear">Linear</option>
+                            <option value="quadratic">Quadratic</option>
+                        </select>
+
+                        <button onclick="fitCurve()" class="btn btn-primary w-100">Fit & Draw</button>
+                    </div>
+
+                    <!-- SAĞ: Grafik + Sonuç -->
+                    <div class="col-md-7">
+                        <div id="plot" class="border rounded p-2 mb-3" style="height: 400px;"></div>
+                        <p id="fitEquation" class="fw-bold fs-5 text-success text-center"></p>
+                    </div>
+                </div>
+
+            </main>
+
+
+            <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+                <div
+                    class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+                    <!-- Sol Telif -->
+                    <div class="mb-2 mb-md-0 small text-muted">
+                        © 2025 Solvix. All rights reserved.
+                    </div>
+
+                    <!-- Orta Başlık ve Açıklama -->
+                    <div class="text-center">
+                        <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+                        <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking
+                            through interactive
+                            learning.</p>
+                    </div>
+
+                    <!-- Sağ İkonlar -->
+                    <div class="footer-icons d-flex align-items-center">
+                        <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank"
+                            class="me-3">
+                            <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+                        </a>
+                        <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+                            <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+                        </a>
+                        <a href="https://github.com/mertaliserbet" target="_blank">
+                            <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+                        </a>
+                    </div>
+
+
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Gerekli JS Kütüphaneleri -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script src="squares.js"></script>
+
+</body>
+
+</html>

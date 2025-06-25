@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvix – Root Finding</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+  <!-- Navbar -->
+  <header class="custom-navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+        <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+        <span class="brand-text">Solvix</span>
+      </a>
+      <div class="navbar-right">
+        <nav class="navbar-menu">
+          <a href="index.html">Home</a>
+          <a href="tutorials.html" class="active">Tutorials</a>
+          
+        </nav>
+        <a href="try-now.html" class="btn-primary">Try Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+        <h5 class="fw-bold mb-4">Topics</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error Analysis</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and Root-Finding</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation Techniques</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+              Differentiation</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations (Linear
+              Systems)</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+        </ul>
+      </aside>
+
+
+      <!-- Main Content -->
+      <main class="col-md-9 col-lg-10 py-4 px-4">
+        <h2 class="fw-bold mb-4">Solving Equations and Root-Finding Methods</h2>
+
+        <h4>1. Why Is Numerical Root Finding Necessary?</h4>
+        <p>
+          In many real-world problems, we need to find the zero (root) of a function, where \( f(x) = 0 \). However, it
+          is not always possible to find these roots using algebraic methods. Especially in cases involving:
+        </p>
+        <ul>
+          <li>Equations without analytical solutions,</li>
+          <li>Transcendental functions (e.g., \( \sin(x) \), \( e^x \)),</li>
+          <li>Complex or large systems...</li>
+        </ul>
+        <p>
+          In such situations, <strong>numerical methods are needed to find approximate solutions</strong>. Numerical
+          root-finding allows us to determine the roots of such functions accurately using computational techniques.
+        </p>
+
+        <h4>2. Basic Concept: What Is a Root?</h4>
+        <p>
+          A root of a function is a value of \( x \) such that \( f(x) = 0 \) — in other words, where the graph of the
+          function crosses the x-axis.
+        </p>
+        <ul>
+          <li>If \( f(x) > 0 \), the graph lies above the x-axis.</li>
+          <li>If \( f(x) < 0 \), it lies below.</li>
+          <li>If \( f(x) = 0 \), the graph intersects the x-axis: this point is the <strong>root</strong>.</li>
+        </ul>
+
+        <h4>3. Bisection Method</h4>
+        <p><strong>Precondition:</strong> \( f(a) \cdot f(b) < 0 \), meaning the function changes sign in the interval
+            \([a, b]\).</p>
+            <p><strong>Steps:</strong></p>
+            <ol>
+              <li>Calculate the midpoint: \( c = \frac{a + b}{2} \)</li>
+              <li>Check the sign of \( f(c) \):</li>
+              <ul>
+                <li>If \( f(a) \cdot f(c) < 0 \) → update to \([a, c]\)</li>
+                <li>If \( f(c) \cdot f(b) < 0 \) → update to \([c, b]\)</li>
+              </ul>
+              <li>Repeat until the interval is below a desired tolerance.</li>
+            </ol>
+            <p>
+              <strong>Advantages:</strong> Simple, always converges (if a root exists).<br>
+              <strong>Disadvantages:</strong> Converges slowly (linearly), needs a valid initial interval.
+            </p>
+
+            <h4>4. Newton-Raphson Method</h4>
+            <p><strong>Formula:</strong>
+              $$ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $$
+            </p>
+            <ol>
+              <li>Choose initial guess \( x_0 \)</li>
+              <li>Update using the formula</li>
+              <li>Repeat until \( \left| x_{n+1} - x_n \right| < \text{tolerance} \)</li>
+            </ol>
+            <p>
+              <strong>Advantages:</strong> Very fast (quadratic convergence)<br>
+              <strong>Disadvantages:</strong> Requires derivative, may diverge, division by zero if \( f'(x) = 0 \)
+            </p>
+
+            <h4>5. Secant Method</h4>
+            <p><strong>Formula:</strong>
+              $$ x_{n+1} = x_n - f(x_n) \cdot \frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})} $$
+            </p>
+            <p>
+              <strong>Advantages:</strong> Derivative-free, converges nearly as fast as Newton-Raphson.<br>
+              <strong>Disadvantages:</strong> Needs two initial values, can be unstable.
+            </p>
+
+            <h4>6. Comparison Table</h4>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th>Method</th>
+                    <th>Requires Derivative</th>
+                    <th>Convergence</th>
+                    <th>Stability</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bisection</td>
+                    <td>No</td>
+                    <td>Linear</td>
+                    <td>Very High</td>
+                    <td>Guaranteed convergence</td>
+                  </tr>
+                  <tr>
+                    <td>Newton-Raphson</td>
+                    <td>Yes</td>
+                    <td>Quadratic</td>
+                    <td>Low to Medium</td>
+                    <td>Sensitive to derivative</td>
+                  </tr>
+                  <tr>
+                    <td>Secant</td>
+                    <td>No</td>
+                    <td>Near Quadratic</td>
+                    <td>Medium</td>
+                    <td>No derivative, but sensitive</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4>7. Real-World Examples</h4>
+            <ul>
+              <li><strong>Economics:</strong> Finding break-even points</li>
+              <li><strong>Physics:</strong> Finding when velocity = 0</li>
+              <li><strong>Electrical Engineering:</strong> Voltage balance</li>
+              <li><strong>Mechanical Engineering:</strong> Equilibrium of systems</li>
+            </ul>
+
+            <h4>8. Conclusion</h4>
+            <p>
+              Root-finding methods are fundamental in numerical analysis. Each method has advantages and drawbacks. The
+              key is selecting the most suitable approach based on the problem structure. These techniques power the
+              core of many computational tools.
+            </p>
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+      <!-- Sol Telif -->
+      <div class="mb-2 mb-md-0 small text-muted">
+        © 2025 Solvix. All rights reserved.
+      </div>
+
+      <!-- Orta Başlık ve Açıklama -->
+      <div class="text-center">
+        <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+        <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through interactive
+          learning.</p>
+      </div>
+
+      <!-- Sağ İkonlar -->
+      <div class="footer-icons d-flex align-items-center">
+        <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+        </a>
+        <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+        </a>
+        <a href="https://github.com/mertaliserbet" target="_blank">
+          <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+        </a>
+      </div>
+
+
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solvix – Linear and Polynomial Interpolation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <!-- MathJax for rendering LaTeX equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- math.js for spline interpolation & advanced math -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.11.1/lib/browser/math.min.js"></script>
+
+    <!-- Chart.js for drawing graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="tutorials-page">
+
+    <!-- Navbar -->
+    <header class="custom-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+                <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+                <span class="brand-text">Solvix</span>
+            </a>
+            <div class="navbar-right">
+                <nav class="navbar-menu">
+                    <a href="index.html">Home</a>
+                    <a href="tutorials.html" class="active">Tutorials</a>
+                    
+                </nav>
+                <a href="try-now.html" class="btn-primary">Try Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Layout -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+                <h5 class="fw-bold mb-4">Topics</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error
+                            Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and
+                            Root-Finding</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation
+                            Techniques</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+                            Differentiation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations
+                            (Linear Systems)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10 py-4 px-4">
+                <h2 class="fw-bold mb-4">Linear and Polynomial Interpolation</h2>
+
+                <h4>1. What is Interpolation?</h4>
+                <p>
+                    Interpolation is a technique used to estimate unknown values between known data points. It is
+                    especially useful in experimental data or functions with limited measurement points to "fill in the
+                    gaps."
+                </p>
+                <p>
+                    <strong>Real-world examples:</strong>
+                <ul>
+                    <li>Estimating missing sensor readings between known time points</li>
+                    <li>Filling in missing days in financial time series</li>
+                    <li>Creating smooth movements in computer graphics</li>
+                </ul>
+                </p>
+
+                <h4>2. Linear Interpolation</h4>
+                <p>The simplest interpolation method. It assumes a straight-line relationship between two known data
+                    points.</p>
+                <p><strong>Formula:</strong></p>
+                <p>$$y = y_0 + \frac{(x - x_0)(y_1 - y_0)}{x_1 - x_0}$$</p>
+                <p>Where:</p>
+                <ul>
+                    <li>\((x_0, y_0)\) and \((x_1, y_1)\): known data points</li>
+                    <li>\(x\): intermediate value where we want to estimate \(y\)</li>
+                    <li>\(y\): estimated value</li>
+                </ul>
+
+                <p><strong>Example:</strong></p>
+                <p>
+                    Given: (2, 4) and (6, 8). Find: y when x = 4<br>
+                    $$y = 4 + \frac{(4 - 2)(8 - 4)}{6 - 2} = 4 + \frac{2 \cdot 4}{4} = 4 + 2 = 6$$
+                </p>
+
+                <h4>3. Polynomial Interpolation</h4>
+                <p>
+                    Used when a single polynomial is required to pass through all data points. The general form:
+                </p>
+                <p>$$P(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n$$</p>
+                <p>
+                    If there are \(n+1\) points, a polynomial of degree \(n\) can pass through all of them. But note:
+                </p>
+                <ul>
+                    <li>Higher degrees can lead to oscillation.</li>
+                    <li>Runge's phenomenon may occur, causing instability.</li>
+                </ul>
+
+                <h4>4. Lagrange Interpolation</h4>
+                <p>One of the most commonly used polynomial methods. Formula:</p>
+                <p>
+                    $$L(x) = \sum_{j=0}^{n} y_j \cdot \ell_j(x)$$<br>
+                    Where:<br>
+                    $$\ell_j(x) = \prod_{\substack{0 \leq m \leq n \\ m \ne j}} \frac{x - x_m}{x_j - x_m}$$
+                </p>
+                <p>
+                    Each term contributes based on the influence of a single \(y_j\). Easy to code, but computationally
+                    intensive for large datasets.
+                </p>
+
+                <h4>5. Newton Interpolation</h4>
+                <p>
+                    An alternative method based on Newton's forward differences.
+                </p>
+                <p>
+                    $$P(x) = a_0 + a_1(x - x_0) + a_2(x - x_0)(x - x_1) + \dots$$
+                </p>
+                <p>
+                    <strong>Advantage:</strong> It can be expanded step-by-step as new data is added. Ideal for
+                    <strong>dynamic</strong> datasets.
+                </p>
+
+                <h4>6. Cubic Spline Interpolation</h4>
+                <p>
+                    Instead of a single polynomial, a <strong>cubic polynomial is fit between each interval</strong>.
+                    Goal: smoother and more accurate transitions.
+                </p>
+                <p>Spline functions satisfy:</p>
+                <ul>
+                    <li>The function is continuous across all intervals</li>
+                    <li>Derivatives are also continuous</li>
+                    <li>It passes through all data points</li>
+                </ul>
+                <p>
+                    Used widely in graphics rendering, animations, and CAD applications.
+                </p>
+
+                <h4>7. Comparison Table</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Method</th>
+                                <th>Advantages</th>
+                                <th>Disadvantages</th>
+                                <th>Application Areas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Linear</td>
+                                <td>Fast, simple</td>
+                                <td>Low accuracy, sharp transitions</td>
+                                <td>Basic predictions, simple sensor data</td>
+                            </tr>
+                            <tr>
+                                <td>Lagrange</td>
+                                <td>Theoretically strong</td>
+                                <td>Heavy computation on large datasets</td>
+                                <td>Mathematical analysis</td>
+                            </tr>
+                            <tr>
+                                <td>Newton</td>
+                                <td>Expandable step-by-step</td>
+                                <td>Similar to Lagrange</td>
+                                <td>Data streams, dynamic updates</td>
+                            </tr>
+                            <tr>
+                                <td>Cubic Spline</td>
+                                <td>Smooth and visually consistent</td>
+                                <td>More complex to implement</td>
+                                <td>Graphics, physics simulation, animation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>🧪 Try It Yourself: Interpolation Visualizer</h4>
+                <div class="row">
+                    <!-- Sol Panel: Giriş -->
+                    <div class="col-md-5">
+                        <div class="card p-3 shadow-sm mb-4">
+                            <label for="pointsInput"><strong>Enter data points (x,y) per line:</strong></label>
+                            <textarea id="pointsInput" class="form-control mb-3" rows="5" placeholder="e.g.
+                                    1,2
+                                    2,3
+                                    3,5
+                                    4,4"></textarea>
+
+                            <label for="methodSelect"><strong>Select Method:</strong></label>
+                            <select id="methodSelect" class="form-select mb-3">
+                                <option value="linear">Linear Interpolation</option>
+                                <option value="spline">Cubic Spline Interpolation</option>
+                            </select>
+
+                            <label for="xEval"><strong>Evaluate at x (optional):</strong></label>
+                            <input type="number" class="form-control mb-3" id="xEval" placeholder="e.g. 2.5">
+
+                            <button onclick="drawInterpolation()" class="btn btn-primary w-100">Draw Graph</button>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Panel: Grafik -->
+                    <div class="col-md-7">
+                        <div class="border bg-light p-3 text-center">
+                            <canvas id="interpolationChart" width="600" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h4>8. Conclusion</h4>
+                <p>
+                    Interpolation is a fundamental tool for making meaningful estimates from limited data. Choosing the
+                    right method is critical for both computational efficiency and result accuracy.
+                </p>
+                <ul>
+                    <li><strong>For simplicity and speed:</strong> Linear</li>
+                    <li><strong>For theoretical accuracy:</strong> Lagrange/Newton</li>
+                    <li><strong>For realism and visual smoothness:</strong> Cubic Spline</li>
+                </ul>
+                <p>
+                    Each method becomes a powerful mathematical tool when applied in the right context.
+                </p>
+
+            </main>
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+            <!-- Sol Telif -->
+            <div class="mb-2 mb-md-0 small text-muted">
+                © 2025 Solvix. All rights reserved.
+            </div>
+
+            <!-- Orta Başlık ve Açıklama -->
+            <div class="text-center">
+                <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+                <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through
+                    interactive
+                    learning.</p>
+            </div>
+
+            <!-- Sağ İkonlar -->
+            <div class="footer-icons d-flex align-items-center">
+                <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+                </a>
+                <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+                </a>
+                <a href="https://github.com/mertaliserbet" target="_blank">
+                    <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+                </a>
+            </div>
+
+
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="linear.js"></script>
+</body>
+
+</html>

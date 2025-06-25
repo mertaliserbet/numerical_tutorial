@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newton-Raphson Method</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+    <!-- Navbar -->
+    <header class="custom-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+                <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+                <span class="brand-text">Solvix</span>
+            </a>
+            <div class="navbar-right">
+                <nav class="navbar-menu">
+                    <a href="index.html">Home</a>
+                    <a href="tutorials.html" class="active">Tutorials</a>
+                    
+                </nav>
+                <a href="try-now.html" class="btn-primary">Try Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Layout -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+                <h5 class="fw-bold mb-4">Topics</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error
+                            Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and
+                            Root-Finding</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation
+                            Techniques</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+                            Differentiation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations
+                            (Linear Systems)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10 py-4 px-4">
+                <h2 class="fw-bold mb-3">Newton-Raphson Method and Comparison with Bisection</h2>
+
+                <hr>
+
+                <h4>1. What is the Newton-Raphson Method?</h4>
+                <p>The Newton-Raphson method is a <strong>fast</strong> numerical technique used to find the root of a
+                    function by utilizing its derivative. The core idea is to use the <strong>intersection point of the
+                        tangent line</strong> with the x-axis as the next approximation.</p>
+
+                <hr>
+
+                <h4>2. Mathematical Definition and Formula</h4>
+                <p>
+                    The derivative-based approach for a function at point \( x_0 \):
+                </p>
+                <p>
+                    $$ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $$
+                </p>
+                <ul>
+                    <li>\( f(x) \): the function</li>
+                    <li>\( f'(x) \): the derivative of the function</li>
+                    <li>\( x_n \): current approximation</li>
+                    <li>\( x_{n+1} \): next approximation</li>
+                </ul>
+
+                <hr>
+
+                <h4>3. Algorithm Steps</h4>
+                <ol>
+                    <li>Choose an initial guess: \( x_0 \)</li>
+                    <li>Iterate using: \( x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \)</li>
+                    <li>Stop when \( \left| x_{n+1} - x_n \right| < \varepsilon \)</li>
+                </ol>
+
+                <hr>
+
+                <h4>4. Advantages ✅</h4>
+                <ul>
+                    <li><strong>Quadratic convergence</strong>: Very fast results with a good initial guess.</li>
+                    <li><strong>High accuracy</strong> can be achieved.</li>
+                </ul>
+
+                <h4>5. Disadvantages ❌</h4>
+                <ul>
+                    <li><strong>Requires derivative</strong>: You must know or compute the derivative.</li>
+                    <li><strong>May diverge</strong> if the initial guess is far from the root.</li>
+                    <li><strong>Division error</strong> if \( f'(x) = 0 \).</li>
+                </ul>
+
+                <hr>
+
+                <h4>6. Python Example</h4>
+                <pre><code class="language-python">def f(x):
+    return x**3 - x - 2
+
+def df(x):
+    return 3*x**2 - 1
+
+def newton_raphson(x0, tol=1e-6, max_iter=100):
+    for _ in range(max_iter):
+        fx = f(x0)
+        dfx = df(x0)
+        if dfx == 0:
+            raise ZeroDivisionError("f'(x) = 0")
+        x1 = x0 - fx / dfx
+        if abs(x1 - x0) &lt; tol:
+            return x1
+        x0 = x1
+    return x0
+</code></pre>
+
+
+                root = newton_raphson(1.5)
+                print(f"Approximate root: {root}")</code></pre>
+
+                <hr>
+
+                <h4>🧪 Try It Yourself: Newton-Raphson Interactive</h4>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card p-3 shadow-sm">
+                            <label for="fx">Function f(x):</label>
+                            <input type="text" id="fx" class="form-control mb-2" value="x^3 - x - 2">
+
+                            <label for="dfx">Derivative f&#39;(x):</label>
+                            <input type="text" id="dfx" class="form-control mb-2" value="3*x^2 - 1">
+
+                            <label for="x0">Initial Guess (x₀):</label>
+                            <input type="number" id="x0" class="form-control mb-2" value="1.5" step="any">
+
+                            <label for="tol">Tolerance:</label>
+                            <input type="text" id="tol" class="form-control mb-2" value="1e-6">
+
+                            <label for="maxIter">Max Iterations:</label>
+                            <input type="number" id="maxIter" class="form-control mb-3" value="20">
+
+                            <button onclick="runNewton()" class="btn btn-primary w-100">Run Newton-Raphson</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="border p-3 bg-light text-center">
+                            <canvas id="newtonCanvas" width="600" height="400" class="w-100"></canvas>
+                            <small class="text-muted">Graph will be displayed after calculation.</small>
+                            <div id="resultOutput" class="mt-3 text-success fw-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+
+                <h4>7. Newton-Raphson vs. Bisection Comparison</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Bisection Method</th>
+                                <th>Newton-Raphson Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Convergence</td>
+                                <td>Guaranteed if [a, b] brackets a root and f is continuous.</td>
+                                <td>Not guaranteed; may diverge.</td>
+                            </tr>
+                            <tr>
+                                <td>Convergence Rate</td>
+                                <td>Linear convergence.</td>
+                                <td>Quadratic convergence.</td>
+                            </tr>
+                            <tr>
+                                <td>Initial Input</td>
+                                <td>Requires interval [a, b] where f(a) and f(b) have opposite signs.</td>
+                                <td>Requires a single initial guess x₀.</td>
+                            </tr>
+                            <tr>
+                                <td>Function Requirement</td>
+                                <td>Function must be continuous.</td>
+                                <td>Function must be differentiable.</td>
+                            </tr>
+                            <tr>
+                                <td>Robustness</td>
+                                <td>Very robust with a good interval.</td>
+                                <td>Less robust, sensitive to initial guess.</td>
+                            </tr>
+                            <tr>
+                                <td>Iteration Cost</td>
+                                <td>Low: midpoint and function evaluations.</td>
+                                <td>Higher: includes derivative computations.</td>
+                            </tr>
+                            <tr>
+                                <td>Use Case</td>
+                                <td>When convergence is critical and derivative is unknown.</td>
+                                <td>When speed is important and derivative is known.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+
+                <h4>8. When to Use Which Method?</h4>
+                <h6>Bisection Method:</h6>
+                <ul>
+                    <li>When guaranteed convergence is needed</li>
+                    <li>When no good initial guess is available</li>
+                    <li>When the function is not differentiable or behaves poorly</li>
+                    <li>As a fallback method</li>
+                </ul>
+                <h6>Newton-Raphson Method:</h6>
+                <ul>
+                    <li>When faster convergence is desired</li>
+                    <li>When a good initial guess is available</li>
+                    <li>When the function is well-behaved and differentiable</li>
+                    <li>Used in optimization and advanced numerical tasks</li>
+                </ul>
+
+                <hr>
+
+                <h4>9. Conclusion</h4>
+                <p>There is no universally "best" method; it depends on the problem:</p>
+                <ul>
+                    <li><strong>Bisection</strong>: Slower but always reliable.</li>
+                    <li><strong>Newton-Raphson</strong>: Faster but more sensitive and requires care.</li>
+                </ul>
+                <p>In practice, a <strong>hybrid strategy</strong> is often ideal: first narrow the root with Bisection,
+                    then refine with Newton-Raphson.</p>
+
+            </main>
+
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+            <!-- Sol Telif -->
+            <div class="mb-2 mb-md-0 small text-muted">
+                © 2025 Solvix. All rights reserved.
+            </div>
+
+            <!-- Orta Başlık ve Açıklama -->
+            <div class="text-center">
+                <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+                <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through
+                    interactive
+                    learning.</p>
+            </div>
+
+            <!-- Sağ İkonlar -->
+            <div class="footer-icons d-flex align-items-center">
+                <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+                </a>
+                <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+                </a>
+                <a href="https://github.com/mertaliserbet" target="_blank">
+                    <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+                </a>
+            </div>
+
+
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.1/math.min.js"></script>
+    <script src="newton-interactive.js"></script>
+</body>
+
+</html>

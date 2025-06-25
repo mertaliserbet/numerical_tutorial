@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvix – Numerical Differentiation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.1/lib/browser/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+  <!-- Navbar -->
+  <header class="custom-navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+        <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+        <span class="brand-text">Solvix</span>
+      </a>
+      <div class="navbar-right">
+        <nav class="navbar-menu">
+          <a href="index.html">Home</a>
+          <a href="tutorials.html" class="active">Tutorials</a>
+          
+        </nav>
+        <a href="try-now.html" class="btn-primary">Try Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+        <h5 class="fw-bold mb-4">Topics</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error Analysis</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and Root-Finding</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-linear.html">Interpolation Techniques</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+              Differentiation</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations (Linear Systems)</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="col-md-9 col-lg-10 py-4 px-4">
+        <h2 class="fw-bold mb-4">Numerical Differentiation</h2>
+
+        <h4>1. Introduction: What Is a Derivative and Why Compute It Numerically?</h4>
+        <p>A derivative represents the instantaneous rate of change of a function at a given point—in other words, the
+          slope of its graph:</p>
+        <p>\( f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \)</p>
+        <p>To compute the derivative analytically, we must know the derivative formula of the function. However, this is
+          not always possible:</p>
+        <ul>
+          <li>When the function is defined only through data points (e.g., in a table)</li>
+          <li>When the function is too complex to differentiate</li>
+          <li>When real-time computations are required in live systems</li>
+        </ul>
+        <p>In such cases, <strong>numerical differentiation</strong> techniques are applied.</p>
+
+        <h4>2. Numerical Differentiation Methods</h4>
+        <p>Numerical differentiation approximates the derivative based on known values of \( f(x) \) at discrete
+          intervals.</p>
+
+        <h5>a) Forward Difference</h5>
+        <p>\( f'(x) \approx \frac{f(x+h) - f(x)}{h} \)</p>
+        <ul>
+          <li>The simplest method</li>
+          <li>Easy to implement</li>
+          <li>Lower accuracy due to higher approximation error</li>
+        </ul>
+
+        <h5>b) Backward Difference</h5>
+        <p>\( f'(x) \approx \frac{f(x) - f(x-h)}{h} \)</p>
+        <ul>
+          <li>Similar in logic to the forward difference</li>
+          <li>Estimates the slope looking to the left of \( x \)</li>
+          <li>Useful when only past values are available</li>
+        </ul>
+
+        <h5>c) Central Difference</h5>
+        <p>\( f'(x) \approx \frac{f(x+h) - f(x-h)}{2h} \)</p>
+        <ul>
+          <li>More balanced and accurate</li>
+          <li>The average of forward and backward differences</li>
+          <li>Lower approximation error</li>
+        </ul>
+
+        <h4>3. Example Calculation: Trigonometric Function</h4>
+        <p>Function: \( f(x) = \sin(x) \)<br>Point: \( x = \frac{\pi}{4} \)<br>Step size: \( h = 0.1 \)</p>
+        <p><strong>Analytical Derivative:</strong><br>\( f'(x) = \cos(x) = \cos\left(\frac{\pi}{4}\right) \approx 0.7071
+          \)</p>
+
+        <h5>a) Forward difference:</h5>
+        <p>\( \frac{\sin(\frac{\pi}{4} + 0.1) - \sin(\frac{\pi}{4})}{0.1} \approx \frac{0.7742 - 0.7071}{0.1} = 0.671 \)
+        </p>
+
+        <h5>b) Backward difference:</h5>
+        <p>\( \frac{\sin(\frac{\pi}{4}) - \sin(\frac{\pi}{4} - 0.1)}{0.1} \approx \frac{0.7071 - 0.6329}{0.1} = 0.742 \)
+        </p>
+
+        <h5>c) Central difference:</h5>
+        <p>\( \frac{\sin(\frac{\pi}{4} + 0.1) - \sin(\frac{\pi}{4} - 0.1)}{2 \cdot 0.1} = \frac{0.7742 - 0.6329}{0.2} =
+          0.7065 \)</p>
+        <p>As seen, the central difference yields the closest approximation to the true value.</p>
+
+        <h4>4. Higher-Order Derivative Approximations</h4>
+
+        <h5>a) Second Derivative:</h5>
+        <p>\( f''(x) \approx \frac{f(x+h) - 2f(x) + f(x-h)}{h^2} \)</p>
+        <p>This formula is frequently used in differential equation approximations (e.g., FEM, CFD).</p>
+
+        <h5>b) Higher-Order Derivatives</h5>
+        <p>More complex formulas are used for higher derivatives.</p>
+        <p>Example for the third derivative:<br>
+          \( f'''(x) \approx \frac{f(x+2h) - 2f(x+h) + 2f(x-h) - f(x-2h)}{2h^3} \)</p>
+        <p>These are important in areas like fluid dynamics and vibration analysis.</p>
+
+        <h4>5. Error, Accuracy, and Choosing "h"</h4>
+        <p>In numerical differentiation, the <strong>step size</strong> \( h \) plays a crucial role:</p>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Step Size (h)</th>
+                <th>Advantage</th>
+                <th>Disadvantage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Very small</td>
+                <td>Closer to truth</td>
+                <td>Higher rounding errors</td>
+              </tr>
+              <tr>
+                <td>Very large</td>
+                <td>Numerical stability</td>
+                <td>Lower approximation accuracy</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Therefore, error analysis should be performed to choose an optimal \( h \).</p>
+
+        <h4>6. Python Implementation Example</h4>
+        <pre><code class="language-python">import numpy as np
+
+f = lambda x: np.sin(x)
+x = np.pi / 4
+h = 0.1
+
+forward = (f(x + h) - f(x)) / h
+backward = (f(x) - f(x - h)) / h
+central = (f(x + h) - f(x - h)) / (2 * h)
+true_val = np.cos(x)
+
+print("Forward Approx:", forward)
+print("Backward Approx:", backward)
+print("Central Approx:", central)
+print("True Derivative:", true_val)</code></pre>
+        <p>The output shows that the central difference provides the most accurate result.</p>
+
+        <hr>
+
+        <!-- 6.5 Numerical Derivative Calculator and Visualization -->
+        <section class="my-5">
+          <h4>🧪 Try It Yourself: Numerical Derivative Calculator and Visualization</h4>
+          <p>Enter a function, point \( x \), and step size \( h \) to see the derivative approximations and graph.</p>
+
+          <div class="row">
+            <!-- Left Column: Inputs -->
+            <div class="col-md-5">
+              <div class="mb-3">
+                <label for="funcInput" class="form-label">Function \( f(x) \):</label>
+                <input type="text" id="funcInput" class="form-control" placeholder="e.g., sin(x)">
+              </div>
+
+              <div class="row mb-3">
+                <div class="col">
+                  <label for="xValue" class="form-label">x:</label>
+                  <input type="number" id="xValue" class="form-control" value="1">
+                </div>
+                <div class="col">
+                  <label for="hValue" class="form-label">h:</label>
+                  <input type="number" step="0.01" id="hValue" class="form-control" value="0.1">
+                </div>
+              </div>
+
+              <button class="btn btn-primary w-100" onclick="computeAndPlot()">Compute</button>
+            </div>
+
+            <!-- Right Column: Results and Chart -->
+            <div class="col-md-7">
+              <div id="resultArea" class="mb-3"></div>
+              <canvas id="derivativeChart" height="300"></canvas>
+            </div>
+          </div>
+        </section>
+
+
+
+        <hr>
+
+        <h4>7. Method Comparison Table</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Method</th>
+                <th>Approach</th>
+                <th>Error Order</th>
+                <th>Application</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Forward Diff.</td>
+                <td>Simple</td>
+                <td>O(h)</td>
+                <td>Quick analysis</td>
+              </tr>
+              <tr>
+                <td>Backward Diff.</td>
+                <td>Simple</td>
+                <td>O(h)</td>
+                <td>Past-point estimation</td>
+              </tr>
+              <tr>
+                <td>Central Diff.</td>
+                <td>Balanced</td>
+                <td>O(h^2)</td>
+                <td>High-precision needs</td>
+              </tr>
+              <tr>
+                <td>Second Deriv.</td>
+                <td>Detailed</td>
+                <td>O(h^2)</td>
+                <td>FEM, CFD</td>
+              </tr>
+              <tr>
+                <td>Third Deriv.</td>
+                <td>Complex</td>
+                <td>O(h^3)</td>
+                <td>Scientific computing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>8. Conclusion</h4>
+        <p>Numerical differentiation becomes essential when function values are known, but their derivatives are not.
+          With the right method and step size, approximation error can be minimized.</p>
+        <ul>
+          <li><strong>Forward/Backward differences</strong>: Quick but less accurate</li>
+          <li><strong>Central difference</strong>: Preferred for higher accuracy</li>
+          <li><strong>Higher derivatives</strong>: Useful in advanced engineering and modeling</li>
+        </ul>
+        <p>Numerical differentiation is a foundational tool in fields like AI, signal processing, financial modeling,
+          and more.</p>
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+      <!-- Sol Telif -->
+      <div class="mb-2 mb-md-0 small text-muted">
+        © 2025 Solvix. All rights reserved.
+      </div>
+
+      <!-- Orta Başlık ve Açıklama -->
+      <div class="text-center">
+        <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+        <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through interactive
+          learning.</p>
+      </div>
+
+      <!-- Sağ İkonlar -->
+      <div class="footer-icons d-flex align-items-center">
+        <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+        </a>
+        <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+        </a>
+        <a href="https://github.com/mertaliserbet" target="_blank">
+          <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+        </a>
+      </div>
+
+
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="differentiation.js"></script>
+</body>
+
+</html>

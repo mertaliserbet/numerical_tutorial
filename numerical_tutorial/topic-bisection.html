@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvix – Bisection Method</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+  <!-- Navbar -->
+  <header class="custom-navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+        <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+        <span class="brand-text">Solvix</span>
+      </a>
+      <div class="navbar-right">
+        <nav class="navbar-menu">
+          <a href="index.html">Home</a>
+          <a href="tutorials.html" class="active">Tutorials</a>
+          
+        </nav>
+        <a href="try-now.html" class="btn-primary">Try Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+        <h5 class="fw-bold mb-4">Topics</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error Analysis</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and Root-Finding</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation Techniques</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical Differentiation</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a></li>
+          <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations (Linear Systems)</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve Fitting</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+          <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+        </ul>
+      </aside>
+
+
+      <!-- Main Content -->
+      <main class="col-md-9 col-lg-10 py-4 px-4">
+        <h2 class="fw-bold mb-4">Bisection Method</h2>
+
+        <h4>1. What Is the Bisection Method?</h4>
+        <p>
+          The Bisection Method is one of the simplest and most reliable numerical methods used for solving root-finding
+          problems.
+          It is based on the <strong>Intermediate Value Theorem</strong>, which states:
+        </p>
+        <blockquote class="blockquote">
+          If a continuous function \( f(x) \) has opposite signs at the endpoints of an interval \([a, b]\), i.e.:<br>
+          \( f(a) \cdot f(b) < 0 \)<br>
+            then there exists at least one root \( c \in (a, b) \) such that \( f(c) = 0 \).
+        </blockquote>
+
+        <h4>2. Why Use Bisection?</h4>
+        <p>In many real-world applications, we encounter equations that:</p>
+        <ul>
+          <li>Have no analytical solutions</li>
+          <li>Involve transcendental functions (e.g., \( \sin(x) \), \( e^x \))</li>
+          <li>Are too complex or nonlinear for algebraic solving</li>
+        </ul>
+        <p>
+          In such cases, the Bisection Method gives us a <strong>guaranteed and simple</strong> way to approximate a
+          root.
+        </p>
+
+        <h4>3. Step-by-Step Algorithm</h4>
+        <ol>
+          <li>Compute the midpoint: \( c = \frac{a + b}{2} \)</li>
+          <li>Evaluate \( f(c) \)</li>
+          <li>Check the sign:
+            <ul>
+              <li>If \( f(a) \cdot f(c) < 0 \), set \( b=c \)</li>
+              <li>If \( f(c) \cdot f(b) < 0 \), set \( a=c \)</li>
+            </ul>
+          </li>
+          <li>Repeat until \( |b - a| < \varepsilon \) or \( |f(c)| < \varepsilon \)</li>
+        </ol>
+        <p>Each iteration cuts the interval in half, bringing us closer to the root.</p>
+
+        <h4>4. Mathematical Analysis</h4>
+        <ul>
+          <li>Interval length after \( n \) steps:
+            $$ |b_n - a_n| = \frac{1}{2^n}(b_0 - a_0) $$
+          </li>
+          <li>To reach error \( \varepsilon \):
+            $$ n \ge \log_2\left(\frac{b_0 - a_0}{\varepsilon}\right) $$
+          </li>
+        </ul>
+        <p>So the convergence is <strong>linear</strong>.</p>
+
+        <h4>5. Advantages ✅</h4>
+        <ul>
+          <li><strong>Guaranteed to converge</strong> if \( f(a) \cdot f(b) < 0 \)</li>
+          <li>No derivative needed</li>
+          <li>Simple to implement</li>
+          <li>Numerically stable</li>
+        </ul>
+
+        <h4>6. Disadvantages ❌</h4>
+        <ul>
+          <li>Slow convergence (linear rate)</li>
+          <li>Requires sign change in the interval</li>
+          <li>Only one root is found per interval</li>
+        </ul>
+
+        <h4>7. Python Example</h4>
+        <pre><code>def f(x):
+    return x**3 - x - 2
+
+def bisection(a, b, tol=1e-6, max_iter=100):
+    if f(a) * f(b) >= 0:
+        raise ValueError("f(a) and f(b) must have opposite signs.")
+
+    for i in range(max_iter):
+        c = (a + b) / 2.0
+        if abs(f(c)) &lt; tol or abs(b - a) &lt; tol:
+            return c
+        if f(a) * f(c) &lt; 0:
+            b = c
+        else:
+            a = c
+    return (a + b) / 2.0
+
+root = bisection(1, 2)
+print(f"Approximate root: {root}")
+</code></pre>
+        <p>This solves \( x^3 - x - 2 = 0 \), whose root is approximately 1.521...</p>
+
+        <h4>🧪 Try It Yourself: Interactive JavaScript</h4>
+        <div class="row">
+          <!-- Sol kısım: Giriş Formu -->
+          <div class="col-md-4">
+            <div class="card p-3 mb-3 shadow-sm">
+              <label for="func" class="form-label">Function f(x):</label>
+              <input type="text" id="func" class="form-control mb-2" value="x^3 - x - 2">
+
+              <label for="a" class="form-label">Start of Interval (a):</label>
+              <input type="number" id="a" class="form-control mb-2" value="1">
+
+              <label for="b" class="form-label">End of Interval (b):</label>
+              <input type="number" id="b" class="form-control mb-2" value="2">
+
+              <label for="tol" class="form-label">Tolerance (ε):</label>
+              <input type="number" id="tol" class="form-control mb-2" value="0.000001" step="any">
+
+              <label for="maxIter" class="form-label">Max Iterations:</label>
+              <input type="number" id="maxIter" class="form-control mb-3" value="50">
+
+              <button class="btn btn-primary w-100" onclick="onRunClicked()">Run Bisection</button>
+            </div>
+          </div>
+
+          <!-- Sağ kısım: Grafik -->
+          <div class="col-md-8">
+            <div class="col-md-8">
+              <!-- Butonlar -->
+              <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-outline-primary btn-sm" onclick="setViewMode('convergence')">Show Convergence
+                  Plot</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="setViewMode('function')">Show Function
+                  Plot</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="setViewMode('both')">Show Both
+                  Side-by-Side</button>
+              </div>
+
+              <!-- Grafik 1 -->
+              <div id="plot-container-1" style="display: none;">
+                <div id="plot" style="width: 100%; height: 400px;"></div>
+              </div>
+
+              <!-- Grafik 2 -->
+              <div id="plot-container-2" style="display: none;">
+                <div id="function-plot" style="width: 100%; height: 400px;"></div>
+              </div>
+
+              <!-- Kök sonucu -->
+              <p id="result" class="mt-3 fw-bold text-success"></p>
+            </div>
+
+          </div>
+        </div>
+
+
+        <h4>8. Summary Table</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Feature</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Requires Derivative</td>
+                <td>❌ No</td>
+              </tr>
+              <tr>
+                <td>Speed</td>
+                <td>🐢 Linear</td>
+              </tr>
+              <tr>
+                <td>Accuracy</td>
+                <td>Depends on tolerance</td>
+              </tr>
+              <tr>
+                <td>Stability</td>
+                <td>✅ High</td>
+              </tr>
+              <tr>
+                <td>Root Guarantee</td>
+                <td>✅ If sign change exists</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>9. Final Note</h4>
+        <p>
+          The Bisection Method is a foundational numerical technique.
+          It is <strong>not the fastest</strong>, but it is <strong>the most reliable</strong>.
+          It's ideal for teaching, testing, and use in situations where robustness is more important than speed.
+        </p>
+      </main>
+
+      <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+      <!-- Sol Telif -->
+      <div class="mb-2 mb-md-0 small text-muted">
+        © 2025 Solvix. All rights reserved.
+      </div>
+
+      <!-- Orta Başlık ve Açıklama -->
+      <div class="text-center">
+        <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+        <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through interactive
+          learning.</p>
+      </div>
+
+      <!-- Sağ İkonlar -->
+      <div class="footer-icons d-flex align-items-center">
+        <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+        </a>
+        <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+          <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+        </a>
+        <a href="https://github.com/mertaliserbet" target="_blank">
+          <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+        </a>
+      </div>
+
+
+    </div>
+  </footer>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Gerekli JS Kütüphaneleri -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <!-- Kendi JavaScript dosyan -->
+  <script src="bisection.js"></script>
+
+</body>
+
+</html>

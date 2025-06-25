@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solvix – Ordinary Differential Equations (ODEs)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="tutorials-page">
+
+    <!-- Navbar -->
+    <header class="custom-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo text-decoration-none d-flex align-items-center">
+                <img src="https://img.icons8.com/?size=100&id=YcP8oPuabAwX&format=png&color=000000" alt="Logo" />
+                <span class="brand-text">Solvix</span>
+            </a>
+            <div class="navbar-right">
+                <nav class="navbar-menu">
+                    <a href="index.html">Home</a>
+                    <a href="tutorials.html" class="active">Tutorials</a>
+
+                </nav>
+                <a href="try-now.html" class="btn-primary">Try Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Layout -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 bg-light sidebar py-4 px-3">
+                <h5 class="fw-bold mb-4">Topics</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="topic-error.html">Numerical Limits and Error
+                            Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-rootfinding.html">Solving Equations and
+                            Root-Finding</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="topic-bisection.html">Bisection Method</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-newton.html">Newton-Raphson Method</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-linear.html">Interpolation
+                            Techniques</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-differentiation.html">Numerical
+                            Differentiation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-integration.html">Numerical Integration</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="topic-solving.html">Solving Many Equations
+                            (Linear
+                            Systems)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-squares.html">Least Squares and Curve
+                            Fitting</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-lu.html">LU Decomposition</a></li>
+                    <li class="nav-item"><a class="nav-link" href="topic-ode.html">Ordinary Differential Equations (ODEs)</a></li>
+                </ul>
+            </aside>
+
+
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10 py-4 px-4">
+
+                <h2> 1. Ordinary Differential Equations (ODEs)</h2>
+                <p>
+                    An <strong>Ordinary Differential Equation (ODE)</strong> is an equation that contains derivatives of
+                    an unknown function.
+                    It is typically written in the form:
+                </p>
+                <div>
+                    \[
+                    \frac{dy}{dx} = f(x, y)
+                    \]
+                </div>
+                <p>
+                    Where:
+                <ul>
+                    <li><code>y</code> is the unknown function,</li>
+                    <li><code>x</code> is the independent variable,</li>
+                    <li><code>f(x, y)</code> defines the derivative <code>dy/dx</code>.</li>
+                </ul>
+                </p>
+
+                <h2> 2. What is Our Goal?</h2>
+                <p>
+                    Solving an ODE numerically means finding approximate values of <code>y</code> starting from a known
+                    initial value, step by step.
+                </p>
+                <p><strong>Initial Value Problem (IVP):</strong></p>
+                <div>
+                    \[
+                    \frac{dy}{dx} = f(x, y), \quad y(x_0) = y_0
+                    \]
+                </div>
+                <p>
+                    The goal is to approximate <code>y</code> at successive points like
+                    <code>x₁ = x₀ + h</code>, <code>x₂ = x₀ + 2h</code>, etc.
+                </p>
+
+                <h2> 3. Euler’s Method</h2>
+                <p>This is the simplest numerical method. The core idea is:</p>
+                <div>
+                    \[
+                    y_{n+1} = y_n + h \cdot f(x_n, y_n)
+                    \]
+                </div>
+                <p>Where:</p>
+                <ul>
+                    <li><code>h</code> = step size</li>
+                    <li><code>(xₙ, yₙ)</code> = current point</li>
+                    <li><code>f(xₙ, yₙ)</code> = slope (i.e., the derivative)</li>
+                </ul>
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Start with the initial point \( (x_0, y_0) \)</li>
+                    <li>Compute the next value: \( y_1 = y_0 + h \cdot f(x_0, y_0) \)</li>
+                    <li>Continue: \( y_2 = y_1 + h \cdot f(x_1, y_1) \), and so on.</li>
+                </ol>
+                <p><strong>Pros:</strong> Simple and fast<br><strong>Cons:</strong> Low accuracy, especially with larger
+                    <code>h</code>
+                </p>
+
+                <h2> 4. Runge-Kutta Methods</h2>
+                <p>These are more advanced and accurate methods than Euler’s. The most common is the <strong>4th Order
+                        Runge-Kutta (RK4)</strong> method.</p>
+                <p><strong>RK4 Formula:</strong></p>
+                <div>
+                    \[
+                    \begin{aligned}
+                    k_1 &= f(x_n, y_n) \\
+                    k_2 &= f\left(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_1\right) \\
+                    k_3 &= f\left(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_2\right) \\
+                    k_4 &= f(x_n + h, y_n + h k_3) \\
+                    y_{n+1} &= y_n + \frac{h}{6} (k_1 + 2k_2 + 2k_3 + k_4)
+                    \end{aligned}
+                    \]
+                </div>
+                <p>
+                    It gives a much better approximation using four slope estimates per step.
+                </p>
+
+                <h2> 5. Example Problem</h2>
+                <p>Given:</p>
+                <div>
+                    \[
+                    \frac{dy}{dx} = x + y, \quad y(0) = 1, \quad h = 0.1
+                    \]
+                </div>
+
+                <h4>Euler Step:</h4>
+                <div>
+                    \[
+                    y_1 = y_0 + h \cdot f(x_0, y_0) = 1 + 0.1 \cdot (0 + 1) = 1.1
+                    \]
+                </div>
+
+                <h4>Runge-Kutta Step:</h4>
+                <div>
+                    \[
+                    \begin{aligned}
+                    k_1 &= f(0, 1) = 1 \\
+                    k_2 &= f(0.05, 1.05) = 1.1 \\
+                    k_3 &= f(0.05, 1.055) = 1.105 \\
+                    k_4 &= f(0.1, 1.1105) = 1.2105 \\
+                    y_1 &= 1 + \frac{0.1}{6}(1 + 2(1.1) + 2(1.105) + 1.2105) \approx 1.1103
+                    \end{aligned}
+                    \]
+                </div>
+                <p>
+                    Euler gives a rough result of 1.1, while RK4 yields a more accurate 1.1103.
+                </p>
+
+                <h2> 6. Real-World Applications</h2>
+                <p>Solving ODEs is essential in modeling physical systems:</p>
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Application</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physics</td>
+                            <td>Free fall, pendulum</td>
+                            <td>Solving motion equations</td>
+                        </tr>
+                        <tr>
+                            <td>Electrical</td>
+                            <td>RC circuits</td>
+                            <td>Voltage change over time</td>
+                        </tr>
+                        <tr>
+                            <td>Biology</td>
+                            <td>Population models</td>
+                            <td>Logistic growth</td>
+                        </tr>
+                        <tr>
+                            <td>Economics</td>
+                            <td>Interest rates</td>
+                            <td>Continuous compound interest</td>
+                        </tr>
+                        <tr>
+                            <td>Engineering</td>
+                            <td>Heat transfer</td>
+                            <td>Based on Fourier’s Law</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2> 7. Error Analysis</h2>
+                <ul>
+                    <li>Euler Method: <strong>O(h)</strong> error</li>
+                    <li>RK4 Method: <strong>O(h⁴)</strong> error</li>
+                </ul>
+                <p>So RK4 gives significantly better accuracy with the same step size, though it requires more
+                    computation.</p>
+
+                <h2> 8. Comparison Table</h2>
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Euler Method</th>
+                            <th>RK4 Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td>Low</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td>Computation</td>
+                            <td>Fast</td>
+                            <td>Slower</td>
+                        </tr>
+                        <tr>
+                            <td>Ease of Use</td>
+                            <td>Easy</td>
+                            <td>Moderate</td>
+                        </tr>
+                        <tr>
+                            <td>Error</td>
+                            <td>O(h)</td>
+                            <td>O(h⁴)</td>
+                        </tr>
+                        <tr>
+                            <td>Best For</td>
+                            <td>Simple systems</td>
+                            <td>More complex ones</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2> 9. Python Implementation (Simple Example)</h2>
+                <pre><code>def f(x, y):
+    return x + y
+
+def euler(x0, y0, h, steps):
+    for i in range(steps):
+        y0 += h * f(x0, y0)
+        x0 += h
+        print(f"x={x0:.2f}, y={y0:.4f}")
+
+def rk4(x0, y0, h, steps):
+    for i in range(steps):
+        k1 = f(x0, y0)
+        k2 = f(x0 + h/2, y0 + h*k1/2)
+        k3 = f(x0 + h/2, y0 + h*k2/2)
+        k4 = f(x0 + h, y0 + h*k3)
+        y0 += h/6 * (k1 + 2*k2 + 2*k3 + k4)
+        x0 += h
+        print(f"x={x0:.2f}, y={y0:.4f}")
+  </code></pre>
+
+                <h2> 10. Summary</h2>
+                <ul>
+                    <li>ODEs are fundamental in modeling physical systems.</li>
+                    <li>Numerical methods let us solve \( \frac{dy}{dx} = f(x,y) \) problems step-by-step.</li>
+                    <li>Euler’s method is simple but inaccurate.</li>
+                    <li>Runge-Kutta (especially 4th order) is widely used for better accuracy.</li>
+                    <li>ODE solvers are used in physics, biology, engineering, and more.</li>
+                </ul>
+
+
+
+                <hr class="my-4">
+                <h3 class="mb-3">🧪 Try It Yourself: ODE Solver</h3>
+
+                <div class="row">
+                    <!-- Sol taraf: Kullanıcı girişi -->
+                    <div class="col-md-6">
+                        <form id="odeForm">
+                            <div class="mb-3">
+                                <label class="form-label">Function \( f(x, y) \)</label>
+                                <input type="text" class="form-control" id="functionInput" placeholder="e.g. x + y"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial value \( x_0 \)</label>
+                                <input type="number" step="any" class="form-control" id="x0" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial value \( y_0 \)</label>
+                                <input type="number" step="any" class="form-control" id="y0" value="1">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Step size \( h \)</label>
+                                <input type="number" step="any" class="form-control" id="stepSize" value="0.1">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Number of steps</label>
+                                <input type="number" class="form-control" id="numSteps" value="10">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Solve</button>
+                        </form>
+                    </div>
+
+                    <!-- Sağ taraf: Grafik ve sonuç -->
+                    <div class="col-md-6">
+                        <h5 class="mb-2">Graphical Output</h5>
+                        <canvas id="odeChart" height="250"></canvas>
+                        <div id="solutionTable" class="mt-4"></div>
+                    </div>
+                </div>
+
+            </main>
+
+
+
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+
+            <!-- Sol Telif -->
+            <div class="mb-2 mb-md-0 small text-muted">
+                © 2025 Solvix. All rights reserved.
+            </div>
+
+            <!-- Orta Başlık ve Açıklama -->
+            <div class="text-center">
+                <p class="fw-bold mb-1">Solvix — Learn. Solve. Excel.</p>
+                <p class="mb-0">Solvix is your companion for mastering numerical methods and math thinking through
+                    interactive
+                    learning.</p>
+            </div>
+
+            <!-- Sağ İkonlar -->
+            <div class="footer-icons d-flex align-items-center">
+                <a href="https://www.linkedin.com/in/mert-ali-%C5%9Ferbet-bab948282/" target="_blank" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn" />
+                </a>
+                <a href="mailto:mertaliserbet123@gmail.com" class="me-3">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/new-post.png" alt="Mail" />
+                </a>
+                <a href="https://github.com/mertaliserbet" target="_blank">
+                    <img src="https://img.icons8.com/ios-glyphs/24/000000/github.png" alt="GitHub" />
+                </a>
+            </div>
+
+
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Gerekli JS Kütüphaneleri -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="ode-solver.js"></script>
+
+
+
+</body>
+
+</html>
